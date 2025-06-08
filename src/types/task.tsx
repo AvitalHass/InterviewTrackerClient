@@ -1,4 +1,4 @@
-export type task{
+export type task = {
     id: number,
     name: string,
     status: string,
