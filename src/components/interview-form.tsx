@@ -14,7 +14,7 @@ import { Switch } from "./ui/switch";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Slider } from "./ui/slider";
 import { Textarea } from "./ui/textarea";
-import { saveInterview, fetchInterviews } from "@/lib/utils";
+import { saveInterview, fetchInterviews } from "../lib/utils";
 
 export default function InterviewForm() {
     const navigate = useNavigate();
