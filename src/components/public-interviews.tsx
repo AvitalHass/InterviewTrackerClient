@@ -9,10 +9,10 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion"
+} from "../components/ui/accordion"
 import { Input } from "./ui/input";
 import { Badge } from "./ui/badge";
-import { fetchInterviews } from "@/lib/utils";
+import { fetchInterviews } from "../lib/utils";
 
 export default function PublicInterviews() {
   const [interviews, setInterviews] = useState<Interview[]>([]);

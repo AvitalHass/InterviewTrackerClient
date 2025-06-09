@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { Interview } from "../types/interview";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import { CalendarPlus } from "lucide-react";
 import StatsBar from "./stats-bar";
 import FilterBar from "./filter-bar";
 import InterviewCard from "./interview-card";
 import { Link } from "react-router-dom";
-import { Filter } from "@/types/filter";
-import { fetchInterviews } from "@/lib/utils";
+import { Filter } from "../types/filter";
+import { fetchInterviews } from "../lib/utils";
 
 export default function Dashboard() {
   const [interviews, setInterviews] = useState<Interview[]>([]);
