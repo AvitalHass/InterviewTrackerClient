@@ -6,11 +6,16 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// utils/api.ts
 export const fetchInterviews = async (queryParams: string = "") => {
   try {
     const response = await fetch(
-      `https://we23tm7jpl.execute-api.us-east-1.amazonaws.com/dev/getInterviews${queryParams}`
+      `https://we23tm7jpl.execute-api.us-east-1.amazonaws.com/dev/getInterviews${queryParams}`,
+      {
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${getAuthToken()}`
+        }
+      }
     );
     if (!response.ok) {
       throw new Error("Failed to fetch interviews");
@@ -28,6 +33,8 @@ export const saveInterview = async (interview: Interview) => {
       method: interview.id ? "PUT" : "POST",
       headers: {
         "Content-Type": "application/json",
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${getAuthToken()}`
       },
       body: JSON.stringify(interview),
     });
@@ -39,4 +46,9 @@ export const saveInterview = async (interview: Interview) => {
     console.error("Error saving interview:", error);
     throw error;
   }
+};
+const getAuthToken = () => {
+  const cookies = document.cookie.split(';');
+  const authCookie = cookies.find(cookie => cookie.trim().startsWith('authToken='));
+  return authCookie ? authCookie.split('=')[1] : null;
 };
