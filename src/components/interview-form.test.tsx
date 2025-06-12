@@ -273,8 +273,7 @@ describe('InterviewForm Component', () => {
         });
 
         it('fetches and populates interview data', async () => {
-            const debug = renderWithRouter(<InterviewForm />);
-            console.log(debug.container.innerHTML);
+            renderWithRouter(<InterviewForm />);
             await waitFor(() => {
                 expect(mockFetchInterviews).toHaveBeenCalledWith('?id=1');
             });
