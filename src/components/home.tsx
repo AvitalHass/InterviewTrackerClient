@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { useAuth } from "../auth/use-auth";
 import { useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie';
@@ -8,25 +8,36 @@ const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 function Home() {
   const { user, login } = useAuth();
   const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null);
 
   const handleCredentialResponse = useCallback(
     async (response: CredentialResponse) => {
       const token = response.credential;
+      setError(null);
 
-      const res = await fetch("https://we23tm7jpl.execute-api.us-east-1.amazonaws.com/dev/auth/google", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token }),
-      });
+      try {
+        const res = await fetch("https://we23tm7jpl.execute-api.us-east-1.amazonaws.com/dev/auth/google", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token }),
+        });
 
-      const data = await res.json();
-      Cookies.set('authToken', data.token, { 
-        expires: 2,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'Lax'
-      });
-      login(data.user);
-      navigate("/dashboard");
+        if (!res.ok) {
+          throw new Error('Login failed. Please try again.');
+        }
+
+        const data = await res.json();
+        Cookies.set('authToken', data.token, { 
+          expires: 2,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'Lax'
+        });
+        login(data.user);
+        navigate("/dashboard");
+      } catch (err) {
+        console.error('Login error:', err);
+        setError(err instanceof Error ? err.message : 'Failed to login. Please try again.');
+      }
     },
     [login, navigate]
   );
@@ -65,7 +76,14 @@ function Home() {
       {user ? (
         <div />
       ) : (
-        <div id="google-button" style={{ width: "200px" }}></div>
+        <div className="flex flex-col items-center gap-4">
+          <div id="google-button" style={{ width: "200px" }}></div>
+          {error && (
+            <div className="text-red-600 text-sm bg-red-50 p-3 rounded-md border border-red-200">
+              {error}
+            </div>
+          )}
+        </div>
       )}
     </div>
   );
